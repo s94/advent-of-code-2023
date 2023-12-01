@@ -15,11 +15,7 @@ describe("Day 01", () => {
 			}
 			calibrationValues.push(Number(`${temp[0]}${temp[temp.length - 1]}`));
 		});
-		let calibrationValuesSum: number = 0;
-		calibrationValues.forEach((n: number) => {
-			if (!isNaN(n))
-				calibrationValuesSum += n;
-		});
-		assert.equal(calibrationValuesSum, 55386);
+		const sum: number = calibrationValues.reduce((previousVal, currentVal) => previousVal + currentVal, 0);
+		assert.equal(sum, 55386);
 	});
 });
