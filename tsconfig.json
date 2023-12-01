@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"noImplicitAny": true,
+		"outDir": "test"
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules"],
+}
+  
