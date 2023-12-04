@@ -4,7 +4,7 @@
   "description": "advent of code 2023",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/*/*.js"
+    "test": "npx tsc && mocha test/*/*.js"
   },
   "author": "",
   "license": "ISC",

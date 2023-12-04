@@ -13,6 +13,14 @@ describe("Day 02", () => {
 		});
 		assert.equal(idSum, 2061);
 	});
+	it("Part 2", () => {
+		let sumOfPower: number = 0;
+		fileContents.forEach((line: string) => {
+			let game: CubeGame = new CubeGame(line);
+			sumOfPower += game.maxRedCubes * game.maxGreenCubes * game.maxBlueCubes;
+		});
+		assert.equal(sumOfPower, 72596);
+	});
 });
 
 class CubeGame {
