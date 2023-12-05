@@ -18,10 +18,25 @@ describe("Day 03", () => {
 		}
 		assert.equal(sum, 514969);
 	});
+	it("Part 2", () => {
+		let sum: number = 0;
+		let engineSchematic: EngineSchematic = new EngineSchematic();
+		for (let i = 0; i < engineSchematic.schematic.length; i++) {
+			const line = engineSchematic.schematic[i];
+			for (let j = 0; j < line.length; j++) {
+				if (isNaN(Number(line[j])) && line[j] !== ".") {
+					engineSchematic.getAdjacentNumbersFromSymbol(i, j);
+				}
+			}
+		}
+		engineSchematic.gearRatios.forEach((val: number) => sum += val);
+		assert.equal(sum, 78915902);
+	});
 });
 
 class EngineSchematic {
 	schematic: string[][] = [];
+	gearRatios: number[] = [];
 
 	constructor() {
 		this.processSchematicFile();
@@ -37,6 +52,9 @@ class EngineSchematic {
 		this.getAdjacentNumbersFromSameLine(line, symbolLocation).forEach((val: number) => retVal.push(val));
 		this.getAdjacentNumbersFromDiffLine(lineAbove, symbolLocation).forEach((val: number) => retVal.push(val));
 		this.getAdjacentNumbersFromDiffLine(lineBelow, symbolLocation).forEach((val: number) => retVal.push(val));
+
+		if (line[symbolLocation] === "*" && retVal.length === 2)
+			this.gearRatios.push(retVal[0] * retVal[1]);
 
 		return retVal;
 	}
