@@ -13,6 +13,25 @@ describe("Day 04", () => {
 		});
 		assert.equal(total, 21213);
 	});
+	it("Part 2", () => {
+		let total: number = 0;
+		let scratchCards: ScratchCard[] = [];
+		fileContents.forEach((line: string) => scratchCards.push(new ScratchCard(line)));
+		for (let i = 0; i < scratchCards.length; i++) {
+			const scratchCard = scratchCards[i];
+			checkScratchCard(scratchCard, i);
+		}
+		assert.equal(total, 8549735);
+
+		function checkScratchCard(scratchCard: ScratchCard, scratchCardNumber: number): void {
+			total += 1;
+			let amountOfWinningNumbers = scratchCard.getAmountOfWinningNumbers();
+			for (let i = 1; i < amountOfWinningNumbers + 1; i++) {
+				let otherScratchCard = scratchCards[scratchCardNumber + i];
+				checkScratchCard(otherScratchCard, scratchCardNumber + i);
+			}
+		}
+	}).timeout(5000);
 });
 
 class ScratchCard {
@@ -36,6 +55,16 @@ class ScratchCard {
 		this.winningNumbers.forEach((num: number) => {
 			if (this.yourNumbers.includes(num))
 				retVal = retVal === 0 ? 1 : retVal + retVal;
+		});
+
+		return retVal;
+	}
+
+	public getAmountOfWinningNumbers(): number {
+		let retVal: number = 0;
+		this.winningNumbers.forEach((num: number) => {
+			if (this.yourNumbers.includes(num))
+				retVal += 1;
 		});
 
 		return retVal;
