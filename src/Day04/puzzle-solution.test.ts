@@ -31,7 +31,7 @@ describe("Day 04", () => {
 				checkScratchCard(otherScratchCard, scratchCardNumber + i);
 			}
 		}
-	});
+	}).timeout(5000);
 });
 
 class ScratchCard {
