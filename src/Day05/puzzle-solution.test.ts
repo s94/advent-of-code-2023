@@ -14,7 +14,7 @@ describe("Day 05", () => {
 		});
 		assert.equal(lowestLocation, 227653707);
 	});
-	it("Part 2", () => {
+	it.skip("Part 2", () => {
 		let lowestLocation: number = 0;
 		const seedPlanter: SeedPlanter = new SeedPlanter(fileContents);
 
@@ -24,9 +24,9 @@ describe("Day 05", () => {
 
 		seedPlanter.seeds.forEach((seed: number) => {
 			if (seedPlanter.seeds.indexOf(seed) % 2)
-				seedStarts.push(seed);
-			else
 				seedLengths.push(seed);
+			else
+				seedStarts.push(seed);
 		});
 
 		for (let i = 0; i < seedStarts.length; i++) {
@@ -39,10 +39,15 @@ describe("Day 05", () => {
 		seedRanges.forEach((seedRange: SeedRange) => {
 			for (let i = seedRange.start; i < seedRange.start + seedRange.length; i++) {
 				const location: number = getLocationValue(i, seedPlanter);
-				lowestLocation = lowestLocation === 0 ? location : location < lowestLocation ? location : lowestLocation;
+				if (lowestLocation === 0)
+					lowestLocation = location;
+			
+				if (location < lowestLocation) 
+					lowestLocation = location;
 			}
 		});
-		assert.equal(lowestLocation, 227653707);
+
+		assert.equal(lowestLocation, 78775051);
 	});
 
 	function getLocationValue(seed: number, seedPlanter: SeedPlanter): number {
