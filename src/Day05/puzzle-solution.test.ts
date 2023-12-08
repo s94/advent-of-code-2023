@@ -9,30 +9,70 @@ describe("Day 05", () => {
 		let lowestLocation: number = 0;
 		const seedPlanter: SeedPlanter = new SeedPlanter(fileContents);
 		seedPlanter.seeds.forEach((seed: number) => {
-			const soil: number = getDestinationValue(seed, seedPlanter.seedToSoilInstructions);
-			const fertilizer: number = getDestinationValue(soil, seedPlanter.soilToFertilizerInstructions);
-			const water: number = getDestinationValue(fertilizer, seedPlanter.fertilizerToWaterInstructions);
-			const light: number = getDestinationValue(water, seedPlanter.waterToLightInstructions);
-			const temperature: number = getDestinationValue(light, seedPlanter.lightToTemperatureInstructions);
-			const humidity: number = getDestinationValue(temperature, seedPlanter.temperatureToHumidityInstructions);
-			const location: number = getDestinationValue(humidity, seedPlanter.humidityToLocationInstructions);
-
+			const location: number = getLocationValue(seed, seedPlanter);
 			lowestLocation = lowestLocation === 0 ? location : location < lowestLocation ? location : lowestLocation;
 		});
 		assert.equal(lowestLocation, 227653707);
-
-		function getDestinationValue(input: number, instructions: Array<MovementInstruction>): number {
-			let retVal: number = input;
-			instructions.forEach((instruction: MovementInstruction) => {
-				if (input >= instruction.sourceStart && input <= instruction.sourceEnd) {
-					let difference: number = input - instruction.sourceStart;
-					retVal = instruction.destinationStart + difference;
-				}
-			});
-
-			return retVal;
-		}
 	});
+	it.skip("Part 2", () => {
+		let lowestLocation: number = 0;
+		const seedPlanter: SeedPlanter = new SeedPlanter(fileContents);
+
+		let seedRanges: Array<SeedRange> = [];
+		let seedStarts: number[] = [];
+		let seedLengths: number[] = [];
+
+		seedPlanter.seeds.forEach((seed: number) => {
+			if (seedPlanter.seeds.indexOf(seed) % 2)
+				seedLengths.push(seed);
+			else
+				seedStarts.push(seed);
+		});
+
+		for (let i = 0; i < seedStarts.length; i++) {
+			seedRanges.push({
+				start: seedStarts[i],
+				length: seedLengths[i]
+			});
+		}
+
+		seedRanges.forEach((seedRange: SeedRange) => {
+			for (let i = seedRange.start; i < seedRange.start + seedRange.length; i++) {
+				const location: number = getLocationValue(i, seedPlanter);
+				if (lowestLocation === 0)
+					lowestLocation = location;
+			
+				if (location < lowestLocation) 
+					lowestLocation = location;
+			}
+		});
+
+		assert.equal(lowestLocation, 78775051);
+	});
+
+	function getLocationValue(seed: number, seedPlanter: SeedPlanter): number {
+		const soil: number = getDestinationValue(seed, seedPlanter.seedToSoilInstructions);
+		const fertilizer: number = getDestinationValue(soil, seedPlanter.soilToFertilizerInstructions);
+		const water: number = getDestinationValue(fertilizer, seedPlanter.fertilizerToWaterInstructions);
+		const light: number = getDestinationValue(water, seedPlanter.waterToLightInstructions);
+		const temperature: number = getDestinationValue(light, seedPlanter.lightToTemperatureInstructions);
+		const humidity: number = getDestinationValue(temperature, seedPlanter.temperatureToHumidityInstructions);
+		const location: number = getDestinationValue(humidity, seedPlanter.humidityToLocationInstructions);
+
+		return location;
+	}
+
+	function getDestinationValue(input: number, instructions: Array<MovementInstruction>): number {
+		let retVal: number = input;
+		instructions.forEach((instruction: MovementInstruction) => {
+			if (input >= instruction.sourceStart && input <= instruction.sourceEnd) {
+				let difference: number = input - instruction.sourceStart;
+				retVal = instruction.destinationStart + difference;
+			}
+		});
+
+		return retVal;
+	}
 });
 
 type MovementInstruction = {
@@ -41,6 +81,11 @@ type MovementInstruction = {
 	sourceStart: number;
 	sourceEnd: number;
 	rangeLength: number;
+}
+
+type SeedRange = {
+	start: number;
+	length: number;
 }
 
 class SeedPlanter {
